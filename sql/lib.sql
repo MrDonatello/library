@@ -5,7 +5,7 @@
 -- Dumped from database version 10.18
 -- Dumped by pg_dump version 10.18
 
--- Started on 2021-08-31 16:34:44
+-- Started on 2021-08-31 18:21:13
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,7 +27,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2834 (class 0 OID 0)
+-- TOC entry 2840 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -73,7 +73,7 @@ CREATE SEQUENCE public.author_id_seq
 ALTER TABLE public.author_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2835 (class 0 OID 0)
+-- TOC entry 2841 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: author_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -90,7 +90,7 @@ CREATE TABLE public.books (
     book_id integer NOT NULL,
     title character varying(40) NOT NULL,
     year_of_publishing integer,
-    genre integer NOT NULL
+    genre_id integer NOT NULL
 );
 
 
@@ -102,8 +102,8 @@ ALTER TABLE public.books OWNER TO postgres;
 --
 
 CREATE TABLE public.books_author (
-    book_id integer,
-    author_id integer
+    book_id integer NOT NULL,
+    author_id integer NOT NULL
 );
 
 
@@ -126,7 +126,7 @@ CREATE SEQUENCE public.books_id_seq
 ALTER TABLE public.books_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2836 (class 0 OID 0)
+-- TOC entry 2842 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: books_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -140,13 +140,37 @@ ALTER SEQUENCE public.books_id_seq OWNED BY public.books.book_id;
 --
 
 CREATE TABLE public.genres (
-    genre_id integer,
+    genre_id integer NOT NULL,
     title character varying(50) DEFAULT NULL::character varying NOT NULL,
     description text NOT NULL
 );
 
 
 ALTER TABLE public.genres OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 16471)
+-- Name: genres_genre_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.genres_genre_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.genres_genre_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2843 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: genres_genre_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.genres_genre_id_seq OWNED BY public.genres.genre_id;
+
 
 --
 -- TOC entry 203 (class 1259 OID 16465)
@@ -181,7 +205,7 @@ CREATE SEQUENCE public.user_user_id_seq
 ALTER TABLE public.user_user_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2837 (class 0 OID 0)
+-- TOC entry 2844 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: user_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -190,7 +214,7 @@ ALTER SEQUENCE public.user_user_id_seq OWNED BY public."user".user_id;
 
 
 --
--- TOC entry 2692 (class 2604 OID 16399)
+-- TOC entry 2694 (class 2604 OID 16399)
 -- Name: authors author_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -198,7 +222,7 @@ ALTER TABLE ONLY public.authors ALTER COLUMN author_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 2693 (class 2604 OID 16410)
+-- TOC entry 2695 (class 2604 OID 16410)
 -- Name: books book_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -206,7 +230,15 @@ ALTER TABLE ONLY public.books ALTER COLUMN book_id SET DEFAULT nextval('public.b
 
 
 --
--- TOC entry 2695 (class 2604 OID 16468)
+-- TOC entry 2697 (class 2604 OID 16478)
+-- Name: genres genre_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.genres ALTER COLUMN genre_id SET DEFAULT nextval('public.genres_genre_id_seq'::regclass);
+
+
+--
+-- TOC entry 2698 (class 2604 OID 16468)
 -- Name: user user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -214,7 +246,7 @@ ALTER TABLE ONLY public."user" ALTER COLUMN user_id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 2697 (class 2606 OID 16401)
+-- TOC entry 2700 (class 2606 OID 16401)
 -- Name: authors author_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -223,7 +255,16 @@ ALTER TABLE ONLY public.authors
 
 
 --
--- TOC entry 2700 (class 2606 OID 16412)
+-- TOC entry 2704 (class 2606 OID 16487)
+-- Name: books_author books_author_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.books_author
+    ADD CONSTRAINT books_author_pk PRIMARY KEY (book_id, author_id);
+
+
+--
+-- TOC entry 2702 (class 2606 OID 16412)
 -- Name: books books_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -232,7 +273,16 @@ ALTER TABLE ONLY public.books
 
 
 --
--- TOC entry 2702 (class 2606 OID 16470)
+-- TOC entry 2706 (class 2606 OID 16480)
+-- Name: genres genres_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.genres
+    ADD CONSTRAINT genres_pk PRIMARY KEY (genre_id);
+
+
+--
+-- TOC entry 2708 (class 2606 OID 16470)
 -- Name: user user_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -241,15 +291,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 2698 (class 1259 OID 16447)
--- Name: books_genre_uindex; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX books_genre_uindex ON public.books USING btree (genre);
-
-
---
--- TOC entry 2703 (class 2606 OID 16430)
+-- TOC entry 2710 (class 2606 OID 16430)
 -- Name: books_author author_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -258,7 +300,7 @@ ALTER TABLE ONLY public.books_author
 
 
 --
--- TOC entry 2704 (class 2606 OID 16425)
+-- TOC entry 2711 (class 2606 OID 16425)
 -- Name: books_author book_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -267,15 +309,15 @@ ALTER TABLE ONLY public.books_author
 
 
 --
--- TOC entry 2705 (class 2606 OID 16451)
--- Name: genres genre_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- TOC entry 2709 (class 2606 OID 16481)
+-- Name: books genre_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.genres
-    ADD CONSTRAINT genre_id FOREIGN KEY (genre_id) REFERENCES public.books(genre);
+ALTER TABLE ONLY public.books
+    ADD CONSTRAINT genre_id FOREIGN KEY (genre_id) REFERENCES public.genres(genre_id);
 
 
--- Completed on 2021-08-31 16:34:45
+-- Completed on 2021-08-31 18:21:14
 
 --
 -- PostgreSQL database dump complete
