@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 
 @Data
 @MappedSuperclass
-abstract class Person {
+public abstract class Person {
 
     @Column(name = "first_name")
     private String firstName;
