@@ -1,9 +1,12 @@
 package com.sinitsyn.library.controller;
 
-import com.sinitsyn.library.model.Author;
+import com.sinitsyn.library.dto.request.AuthorDto;
+import com.sinitsyn.library.dto.response.AuthorDtoResponse;
+import com.sinitsyn.library.exceptions.ServiceException;
 import com.sinitsyn.library.service.AuthorService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,27 +20,27 @@ public class AuthorController {
     }
 
     @GetMapping
-    public List<Author> authors() {
+    public List<AuthorDtoResponse> authors() {
         return authorService.findAll();
     }
 
     @GetMapping("{id}")
-    public Author getOneAuthor(@PathVariable("id") Author author) {
-        return authorService.findAuthorById(author);
+    public AuthorDtoResponse getOneAuthor(@PathVariable Long id) throws ServiceException {
+        return authorService.findAuthorById(id);
     }
 
     @PostMapping
-    public Author addAuthor(@RequestBody Author author) {
+    public AuthorDtoResponse addAuthor(@RequestBody @Valid AuthorDto author) throws ServiceException {
         return authorService.addAuthor(author);
     }
 
     @PutMapping("{id}")
-    public Author updateAuthor(@PathVariable("id") Author authorFromDataBase, @RequestBody Author updatedAuthor) {
-        return authorService.updateAuthor(authorFromDataBase, updatedAuthor);
+    public AuthorDtoResponse updateAuthor(@PathVariable Long id, @RequestBody @Valid AuthorDto updatedAuthor) throws ServiceException {
+        return authorService.updateAuthor(updatedAuthor, id);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Author author) {
-        authorService.deleteAuthor(author);
+    public void delete(@PathVariable Long id)  {
+       authorService.deleteAuthor(id);
     }
 }

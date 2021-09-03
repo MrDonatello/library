@@ -1,4 +1,6 @@
-package com.sinitsyn.library.validation;
+package com.sinitsyn.library.validation.validdators;
+
+import com.sinitsyn.library.validation.NotNullInterface;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

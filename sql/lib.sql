@@ -5,7 +5,7 @@
 -- Dumped from database version 10.18
 -- Dumped by pg_dump version 10.18
 
--- Started on 2021-09-02 00:12:26
+-- Started on 2021-09-03 10:42:12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,7 +20,7 @@ SET row_security = off;
 
 DROP DATABASE librarydata;
 --
--- TOC entry 2840 (class 1262 OID 16393)
+-- TOC entry 2840 (class 1262 OID 16527)
 -- Name: librarydata; Type: DATABASE; Schema: -; Owner: postgres
 --
 
@@ -64,7 +64,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 197 (class 1259 OID 16396)
+-- TOC entry 196 (class 1259 OID 16589)
 -- Name: authors; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -74,14 +74,14 @@ CREATE TABLE public.authors (
     last_name character varying(40) NOT NULL,
     patronymic character varying(40),
     biography text,
-    "year_of_birth " integer
+    year_of_birth integer
 );
 
 
 ALTER TABLE public.authors OWNER TO postgres;
 
 --
--- TOC entry 196 (class 1259 OID 16394)
+-- TOC entry 197 (class 1259 OID 16595)
 -- Name: author_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -98,7 +98,7 @@ ALTER TABLE public.author_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 2844 (class 0 OID 0)
--- Dependencies: 196
+-- Dependencies: 197
 -- Name: author_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -106,7 +106,7 @@ ALTER SEQUENCE public.author_id_seq OWNED BY public.authors.author_id;
 
 
 --
--- TOC entry 199 (class 1259 OID 16407)
+-- TOC entry 198 (class 1259 OID 16597)
 -- Name: books; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -114,7 +114,7 @@ CREATE TABLE public.books (
     book_id integer NOT NULL,
     title character varying(100) NOT NULL,
     year_of_publishing integer NOT NULL,
-    genre_id integer,
+    genre character varying(50),
     isbn character varying(17) NOT NULL
 );
 
@@ -122,7 +122,7 @@ CREATE TABLE public.books (
 ALTER TABLE public.books OWNER TO postgres;
 
 --
--- TOC entry 200 (class 1259 OID 16417)
+-- TOC entry 199 (class 1259 OID 16600)
 -- Name: books_authors; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -135,7 +135,7 @@ CREATE TABLE public.books_authors (
 ALTER TABLE public.books_authors OWNER TO postgres;
 
 --
--- TOC entry 198 (class 1259 OID 16405)
+-- TOC entry 200 (class 1259 OID 16603)
 -- Name: books_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -152,7 +152,7 @@ ALTER TABLE public.books_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 2845 (class 0 OID 0)
--- Dependencies: 198
+-- Dependencies: 200
 -- Name: books_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -160,21 +160,21 @@ ALTER SEQUENCE public.books_id_seq OWNED BY public.books.book_id;
 
 
 --
--- TOC entry 201 (class 1259 OID 16448)
+-- TOC entry 201 (class 1259 OID 16605)
 -- Name: genres; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.genres (
     genre_id integer NOT NULL,
     title character varying(50) DEFAULT NULL::character varying NOT NULL,
-    description text NOT NULL
+    description text
 );
 
 
 ALTER TABLE public.genres OWNER TO postgres;
 
 --
--- TOC entry 204 (class 1259 OID 16471)
+-- TOC entry 202 (class 1259 OID 16612)
 -- Name: genres_genre_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -190,7 +190,7 @@ ALTER TABLE public.genres_genre_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 2846 (class 0 OID 0)
--- Dependencies: 204
+-- Dependencies: 202
 -- Name: genres_genre_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -198,7 +198,7 @@ ALTER SEQUENCE public.genres_genre_id_seq OWNED BY public.genres.genre_id;
 
 
 --
--- TOC entry 203 (class 1259 OID 16465)
+-- TOC entry 203 (class 1259 OID 16614)
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -214,7 +214,7 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 202 (class 1259 OID 16463)
+-- TOC entry 204 (class 1259 OID 16617)
 -- Name: user_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -231,7 +231,7 @@ ALTER TABLE public.user_user_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 2847 (class 0 OID 0)
--- Dependencies: 202
+-- Dependencies: 204
 -- Name: user_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -239,7 +239,7 @@ ALTER SEQUENCE public.user_user_id_seq OWNED BY public.users.user_id;
 
 
 --
--- TOC entry 2694 (class 2604 OID 16498)
+-- TOC entry 2694 (class 2604 OID 16619)
 -- Name: authors author_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -247,7 +247,7 @@ ALTER TABLE ONLY public.authors ALTER COLUMN author_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 2695 (class 2604 OID 16499)
+-- TOC entry 2695 (class 2604 OID 16620)
 -- Name: books book_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -255,7 +255,7 @@ ALTER TABLE ONLY public.books ALTER COLUMN book_id SET DEFAULT nextval('public.b
 
 
 --
--- TOC entry 2697 (class 2604 OID 16500)
+-- TOC entry 2697 (class 2604 OID 16621)
 -- Name: genres genre_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -263,7 +263,7 @@ ALTER TABLE ONLY public.genres ALTER COLUMN genre_id SET DEFAULT nextval('public
 
 
 --
--- TOC entry 2698 (class 2604 OID 16501)
+-- TOC entry 2698 (class 2604 OID 16622)
 -- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -271,7 +271,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 
 
 --
--- TOC entry 2700 (class 2606 OID 16401)
+-- TOC entry 2700 (class 2606 OID 16624)
 -- Name: authors author_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -280,7 +280,7 @@ ALTER TABLE ONLY public.authors
 
 
 --
--- TOC entry 2705 (class 2606 OID 16487)
+-- TOC entry 2705 (class 2606 OID 16626)
 -- Name: books_authors books_author_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -289,7 +289,7 @@ ALTER TABLE ONLY public.books_authors
 
 
 --
--- TOC entry 2703 (class 2606 OID 16412)
+-- TOC entry 2703 (class 2606 OID 16628)
 -- Name: books books_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -298,7 +298,7 @@ ALTER TABLE ONLY public.books
 
 
 --
--- TOC entry 2707 (class 2606 OID 16480)
+-- TOC entry 2707 (class 2606 OID 16630)
 -- Name: genres genres_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -307,7 +307,7 @@ ALTER TABLE ONLY public.genres
 
 
 --
--- TOC entry 2710 (class 2606 OID 16470)
+-- TOC entry 2710 (class 2606 OID 16632)
 -- Name: users user_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -316,7 +316,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2701 (class 1259 OID 16496)
+-- TOC entry 2701 (class 1259 OID 16633)
 -- Name: books_isbn_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -324,7 +324,7 @@ CREATE UNIQUE INDEX books_isbn_uindex ON public.books USING btree (isbn);
 
 
 --
--- TOC entry 2708 (class 1259 OID 16489)
+-- TOC entry 2708 (class 1259 OID 16634)
 -- Name: genres_title_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -332,7 +332,7 @@ CREATE UNIQUE INDEX genres_title_uindex ON public.genres USING btree (title);
 
 
 --
--- TOC entry 2712 (class 2606 OID 16430)
+-- TOC entry 2712 (class 2606 OID 16635)
 -- Name: books_authors author_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -341,7 +341,7 @@ ALTER TABLE ONLY public.books_authors
 
 
 --
--- TOC entry 2713 (class 2606 OID 16425)
+-- TOC entry 2713 (class 2606 OID 16640)
 -- Name: books_authors book_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -350,12 +350,12 @@ ALTER TABLE ONLY public.books_authors
 
 
 --
--- TOC entry 2711 (class 2606 OID 16481)
--- Name: books genre_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- TOC entry 2711 (class 2606 OID 16676)
+-- Name: books genre; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.books
-    ADD CONSTRAINT genre_id FOREIGN KEY (genre_id) REFERENCES public.genres(genre_id);
+    ADD CONSTRAINT genre FOREIGN KEY (genre) REFERENCES public.genres(title) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -367,7 +367,7 @@ ALTER TABLE ONLY public.books
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2021-09-02 00:12:27
+-- Completed on 2021-09-03 10:42:13
 
 --
 -- PostgreSQL database dump complete
