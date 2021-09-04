@@ -1,24 +1,23 @@
 package com.sinitsyn.library.validation.validdators;
 
-import com.sinitsyn.library.validation.MaxNameLength;
+import com.sinitsyn.library.validation.MaxLengthIsbnInterface;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-
-public class MaxNameLengthValidator implements ConstraintValidator<MaxNameLength, String> {
+public class MaxLengthIsbnValidator implements ConstraintValidator<MaxLengthIsbnInterface, String> {
 
     @Value("${max_name_length}")
-    private int maxNameLength;
+    private int maxIsbnLength;
 
     @Override
-    public void initialize(MaxNameLength maxNameLength) {
+    public void initialize(MaxLengthIsbnInterface maxLengthInterface) {
 
     }
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return s.length() < maxNameLength;
+        return s.length() < maxIsbnLength;
     }
 }

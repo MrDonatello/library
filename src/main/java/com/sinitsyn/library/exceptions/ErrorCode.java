@@ -7,6 +7,8 @@ public enum ErrorCode {
     INVALID_LAST_NAME("last name field is invalid"),
     INVALID_MAX_LENGTH(""),
     INVALID_MIN_LENGTH(""),
+    INCORRECT_YEAR_OF_BIRTH("incorrect year of birth"),
+    INCORRECT_YEAR_OF_PUBLISHING("incorrect year of publishing"),
     ERROR_ADD_TO_DATABASE("error add object to database"),
     ERROR_DELETE_OBJECT_FROM_DATABASE("error delete object from database"),
     ERROR_FIND_OBJECT_TO_DATABASE("error find object to database"),

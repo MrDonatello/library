@@ -1,15 +1,19 @@
 package com.sinitsyn.library.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sinitsyn.library.dto.request.BookAuthorDto;
+import com.sinitsyn.library.dto.request.BookDto;
+import com.sinitsyn.library.dto.response.BookDtoResponse;
 import com.sinitsyn.library.exceptions.ApiError;
 import com.sinitsyn.library.exceptions.ErrorCode;
 import com.sinitsyn.library.exceptions.ServiceException;
 import com.sinitsyn.library.model.Book;
-import com.sinitsyn.library.model.Genre;
+import com.sinitsyn.library.repository.BookAuthorRepository;
 import com.sinitsyn.library.repository.BookRepository;
-import org.springframework.beans.BeanUtils;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,63 +21,50 @@ public class BookService {
 
 
     private final BookRepository bookRepository;
-    private final GenreService genreService;
+    private final BookAuthorRepository bookAuthorRepository;
+    private final ObjectMapper objectMapper;
 
 
-    public BookService(BookRepository bookRepository, GenreService genreService) {
+    public BookService(BookRepository bookRepository, BookAuthorRepository bookAuthorRepository, ObjectMapper objectMapper) {
         this.bookRepository = bookRepository;
-        this.genreService = genreService;
+        this.bookAuthorRepository = bookAuthorRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public Book addBook(Book book) throws ServiceException {
-        if (validate(book)) {
-            try {
-                return bookRepository.save(book);
-            } catch (RuntimeException e) {
-                ArrayList<ApiError> errors = new ArrayList<>();
-                ApiError apiError = new ApiError(ErrorCode.ERROR_ADD_TO_DATABASE.name(), "AddBookMethod", e.getCause().getMessage());
-                errors.add(apiError);
-                throw new ServiceException(errors);
-
-            }
-
-
-        } else return null;
+    public List<BookDtoResponse> findAll() {
+        return (objectMapper.convertValue(bookRepository.findAll(), new TypeReference<List<BookDtoResponse>>() {
+        }));
     }
 
-    public Book updateBook(Book bookFromDataBase, Book updatedBook) {//validate
-        BeanUtils.copyProperties(updatedBook, bookFromDataBase, "id");
-        return bookRepository.save(bookFromDataBase);
+    public BookDtoResponse findBookById(Long id) throws ServiceException {
+        Book user = bookRepository.findById(id).orElseThrow(() -> new ServiceException(new ApiError(ErrorCode.ERROR_FIND_OBJECT_TO_DATABASE.name(), "findBookById Method", "book with id = " + id + " not found")));
+        return objectMapper.convertValue(user, BookDtoResponse.class);
     }
 
-    public void deleteBook(Book book) {
-        bookRepository.delete(book);
-    }
-
-    public Book findBookById(Book book) throws ServiceException { //validate
+    public BookDtoResponse addBook(BookDto bookDto) throws ServiceException {
+        Book book = objectMapper.convertValue(bookDto, Book.class);
+        Book saveBook;
         try {
-            return bookRepository.findById(book.getId()).orElseThrow(RuntimeException::new);
+            saveBook = bookRepository.save(book);
         } catch (RuntimeException e) {
-            ArrayList<ApiError> errors = new ArrayList<>();
-            ApiError apiError = new ApiError(ErrorCode.ERROR_FIND_OBJECT_TO_DATABASE.name(), "findBookByIdMethod", e.getCause().getMessage());
-            errors.add(apiError);
-            throw new ServiceException(errors);
+            throw new ServiceException(new ApiError(ErrorCode.ERROR_ADD_TO_DATABASE.name(), "addBookMethod", NestedExceptionUtils.getMostSpecificCause(e).getMessage()));
         }
+        return objectMapper.convertValue(saveBook, BookDtoResponse.class);
 
     }
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public BookDtoResponse updateBook(BookDto updatedBook, Long id) throws ServiceException {
+        updatedBook.setId(id);
+        findBookById(id);
+        return addBook(updatedBook);
     }
 
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
 
-    private boolean validate(Book book) {
+    public void deleteBookAuthor( Long id, BookAuthorDto authorDto ) {
 
-        if (book.getGenre() != null && !genreService.isContainsTitle(book.getGenre())) {
-            Genre genre = new Genre();
-            genre.setTitle(book.getGenre());
-            genreService.addGenre(genre);
-        }
-        return book.getTitle() != null && book.getYearOfPublishing() != 0 && book.getIsbn() != null;
+        bookAuthorRepository.deleteByAuthorIdAndBookId((long) 2, (long) 18);
     }
 }

@@ -5,13 +5,11 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class AuthorDtoResponse {
+public class UserDtoResponse {
 
     private Long id;
     private String firstName;
     private String lastName;
     private String patronymic;
     private int yearOfBirth;
-    private String biography;
-
 }

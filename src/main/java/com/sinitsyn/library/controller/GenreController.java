@@ -1,10 +1,13 @@
 package com.sinitsyn.library.controller;
 
+import com.sinitsyn.library.dto.request.GenreDto;
+import com.sinitsyn.library.dto.response.GenreDtoResponse;
 import com.sinitsyn.library.exceptions.ServiceException;
 import com.sinitsyn.library.model.Genre;
 import com.sinitsyn.library.service.GenreService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,27 +21,27 @@ public class GenreController {
     }
 
     @GetMapping
-    public List<Genre> genres() {
+    public List<GenreDtoResponse> genres() {
         return genreService.findAll();
     }
 
     @GetMapping("{id}")
-    public Genre getOneGenre(@PathVariable("id") Genre genre) throws ServiceException {
-        return genreService.findGenreById(genre);
+    public GenreDtoResponse getOneGenre(@PathVariable Long id) throws ServiceException {
+        return genreService.findGenreById(id);
     }
 
     @PostMapping
-    public Genre addGenre(@RequestBody Genre genre) {
+    public GenreDtoResponse addGenre(@RequestBody @Valid GenreDto genre)throws ServiceException {
         return genreService.addGenre(genre);
     }
 
     @PutMapping("{id}")
-    public Genre updateGenre(@PathVariable("id") Genre genreFromDataBase, @RequestBody Genre updatedGenre) {
-        return genreService.updateGenre(genreFromDataBase, updatedGenre);
+    public GenreDtoResponse updateGenre(@PathVariable Long id, @RequestBody @Valid GenreDto updatedGenre)throws ServiceException {
+        return genreService.updateGenre(updatedGenre, id);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Genre genre) {
-        genreService.deleteGenre(genre);
+    public void delete(@PathVariable Long id) {
+        genreService.deleteGenre(id);
     }
 }

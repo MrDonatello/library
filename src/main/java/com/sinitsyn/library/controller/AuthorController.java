@@ -30,8 +30,8 @@ public class AuthorController {
     }
 
     @PostMapping
-    public AuthorDtoResponse addAuthor(@RequestBody @Valid AuthorDto author) throws ServiceException {
-        return authorService.addAuthor(author);
+    public AuthorDtoResponse addAuthor(@RequestBody @Valid AuthorDto authorDto) throws ServiceException {
+        return authorService.addAuthor(authorDto);
     }
 
     @PutMapping("{id}")
@@ -40,7 +40,7 @@ public class AuthorController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id)  {
-       authorService.deleteAuthor(id);
+    public void delete(@PathVariable Long id) {
+        authorService.deleteAuthor(id);
     }
 }

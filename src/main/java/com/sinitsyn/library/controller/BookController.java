@@ -1,11 +1,15 @@
 package com.sinitsyn.library.controller;
 
 
+import com.sinitsyn.library.dto.request.BookAuthorDto;
+import com.sinitsyn.library.dto.request.BookDto;
+import com.sinitsyn.library.dto.response.BookDtoResponse;
 import com.sinitsyn.library.exceptions.ServiceException;
-import com.sinitsyn.library.model.Book;
+import com.sinitsyn.library.model.BookAuthor;
 import com.sinitsyn.library.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,27 +23,33 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> books() {
+    public List<BookDtoResponse> books() {
         return bookService.findAll();
     }
 
     @GetMapping("{id}")
-    public Book getOneBook(@PathVariable("id") Book book) throws ServiceException {
-        return bookService.findBookById(book);
+    public BookDtoResponse getOneBook(@PathVariable long id) throws ServiceException {
+        return bookService.findBookById(id);
     }
 
     @PostMapping
-    public Book addBook(@RequestBody Book book) throws ServiceException {
-        return bookService.addBook(book);
+    public BookDtoResponse addBook(@RequestBody @Valid BookDto bookDto) throws ServiceException {
+        return bookService.addBook(bookDto);
     }
 
     @PutMapping("{id}")
-    public Book updateBook(@PathVariable("id") Book bookFromDataBase, @RequestBody Book updatedBook) {
-        return bookService.updateBook(bookFromDataBase, updatedBook);
+    public BookDtoResponse updateBook(@PathVariable Long id, @RequestBody @Valid BookDto updatedBook) throws ServiceException {
+        return bookService.updateBook(updatedBook, id);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Book book) {
-        bookService.deleteBook(book);
+    public void delete(@PathVariable Long id) {
+        bookService.deleteBook(id);
+    }
+
+    @DeleteMapping("{id}/remove")
+    public void deleteBookAuthor(@PathVariable Long id) {
+        BookAuthorDto author = new BookAuthorDto();
+        bookService.deleteBookAuthor(id, author);
     }
 }

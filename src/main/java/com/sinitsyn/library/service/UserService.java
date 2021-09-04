@@ -1,59 +1,58 @@
 package com.sinitsyn.library.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sinitsyn.library.dto.request.UserDto;
+import com.sinitsyn.library.dto.response.UserDtoResponse;
 import com.sinitsyn.library.exceptions.ApiError;
 import com.sinitsyn.library.exceptions.ErrorCode;
 import com.sinitsyn.library.exceptions.ServiceException;
 import com.sinitsyn.library.model.User;
 import com.sinitsyn.library.repository.UserRepository;
-import org.springframework.beans.BeanUtils;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ObjectMapper objectMapper) {
         this.userRepository = userRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public User addUser(User user) {
-        if (validate(user)) {
-            return userRepository.save(user);
-        } else return null;
+    public List<UserDtoResponse> findAll() {
+        return (objectMapper.convertValue(userRepository.findAll(), new TypeReference<List<UserDtoResponse>>() {
+        }));
     }
 
-    public User updateUser(User userFromDataBase, User updatedUser) {
-        BeanUtils.copyProperties(updatedUser, userFromDataBase, "id");
-        return userRepository.save(userFromDataBase);
+    public UserDtoResponse findUserById(Long id) throws ServiceException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ServiceException(new ApiError(ErrorCode.ERROR_FIND_OBJECT_TO_DATABASE.name(), "findUserById Method", "user with id = " + id + " not found")));
+        return objectMapper.convertValue(user, UserDtoResponse.class);
     }
 
-    public void deleteUser(User user) {
-        userRepository.delete(user);
-    }
-
-    public User findUserById(User user) throws ServiceException {
+    public UserDtoResponse addUser(UserDto userDto) throws ServiceException {
+        User user = objectMapper.convertValue(userDto, User.class);
+        User saveUser;
         try {
-            return userRepository.findById(user.getId()).orElseThrow(RuntimeException::new);
-        }catch (RuntimeException e){
-            ArrayList<ApiError> errors = new ArrayList<>();
-            ApiError apiError = new ApiError(ErrorCode.ERROR_FIND_OBJECT_TO_DATABASE.name(), "findUserByIdMethod", e.getCause().getMessage());
-            errors.add(apiError);
-            throw new ServiceException(errors);
+            saveUser = userRepository.save(user);
+        } catch (RuntimeException e) {
+            throw new ServiceException(new ApiError(ErrorCode.ERROR_ADD_TO_DATABASE.name(), "addUserMethod", NestedExceptionUtils.getMostSpecificCause(e).getMessage()));
         }
+        return objectMapper.convertValue(saveUser, UserDtoResponse.class);
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public UserDtoResponse updateUser(UserDto updatedUser, Long id) throws ServiceException {
+        updatedUser.setId(id);
+        findUserById(id);
+        return addUser(updatedUser);
     }
 
-
-    private boolean validate(User user) {
-
-        return user.getFirstName() != null && user.getLastName() != null && user.getYearOfBirth() != 0;
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
-
 }

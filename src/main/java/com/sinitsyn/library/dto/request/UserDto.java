@@ -2,12 +2,12 @@ package com.sinitsyn.library.dto.request;
 
 import com.sinitsyn.library.exceptions.ErrorCode;
 import com.sinitsyn.library.validation.MaxLengthInterface;
+import com.sinitsyn.library.validation.MinLengthInterface;
 import com.sinitsyn.library.validation.PatternInterface;
 import lombok.Data;
 
 @Data
-public class AuthorDto {
-
+public class UserDto {
 
     private Long id;
 
@@ -22,7 +22,6 @@ public class AuthorDto {
     @MaxLengthInterface
     private String patronymic;
 
-    private String biography;
-
+    @MinLengthInterface(error = ErrorCode.INCORRECT_YEAR_OF_BIRTH, message = "incorrect year of birth")
     private int yearOfBirth;
 }

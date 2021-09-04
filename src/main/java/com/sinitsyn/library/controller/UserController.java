@@ -1,10 +1,12 @@
 package com.sinitsyn.library.controller;
 
+import com.sinitsyn.library.dto.request.UserDto;
+import com.sinitsyn.library.dto.response.UserDtoResponse;
 import com.sinitsyn.library.exceptions.ServiceException;
-import com.sinitsyn.library.model.User;
 import com.sinitsyn.library.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,27 +20,27 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> users() {
+    public List<UserDtoResponse> users() {
         return userService.findAll();
     }
 
     @GetMapping("{id}")
-    public User getOneUser(@PathVariable("id") User user) throws ServiceException {
-        return userService.findUserById(user);
+    public UserDtoResponse getOneUser(@PathVariable Long id) throws ServiceException {
+        return userService.findUserById(id);
     }
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    public UserDtoResponse addUser(@RequestBody @Valid UserDto userDto) throws ServiceException {
+        return userService.addUser(userDto);
     }
 
     @PutMapping("{id}")
-    public User updateUser(@PathVariable("id") User userFromDataBase, @RequestBody User updatedUser) {
-        return userService.updateUser(userFromDataBase, updatedUser);
+    public UserDtoResponse updateUser(@PathVariable Long id, @RequestBody @Valid UserDto updatedUser) throws ServiceException {
+        return userService.updateUser(updatedUser, id);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") User user) {
-        userService.deleteUser(user);
+    public void delete(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }

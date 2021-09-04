@@ -10,10 +10,6 @@ public class ApiError {
     private String field;
     private String message;
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
     public ApiError(String errorCode, String field, String message) {
         this.errorCode = errorCode;
         this.field = field;
@@ -22,6 +18,4 @@ public class ApiError {
 
     public ApiError() {
     }
-
-
 }
