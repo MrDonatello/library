@@ -3,6 +3,7 @@ package com.sinitsyn.library.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinitsyn.library.dto.request.AuthorDto;
+import com.sinitsyn.library.dto.request.BookAuthorDto;
 import com.sinitsyn.library.dto.response.AuthorDtoResponse;
 import com.sinitsyn.library.exceptions.ApiError;
 import com.sinitsyn.library.exceptions.ErrorCode;
@@ -56,5 +57,9 @@ public class AuthorService {
 
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
+    }
+
+    Long getAuthorId(BookAuthorDto bookAuthorDto) {
+        return authorRepository.getAuthorId(bookAuthorDto.getFirstName(), bookAuthorDto.getLastName(), bookAuthorDto.getYearOfBirth()).getId();
     }
 }

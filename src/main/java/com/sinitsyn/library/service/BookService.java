@@ -9,6 +9,7 @@ import com.sinitsyn.library.exceptions.ApiError;
 import com.sinitsyn.library.exceptions.ErrorCode;
 import com.sinitsyn.library.exceptions.ServiceException;
 import com.sinitsyn.library.model.Book;
+import com.sinitsyn.library.model.BookAuthor;
 import com.sinitsyn.library.repository.BookAuthorRepository;
 import com.sinitsyn.library.repository.BookRepository;
 import org.springframework.core.NestedExceptionUtils;
@@ -23,12 +24,14 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookAuthorRepository bookAuthorRepository;
     private final ObjectMapper objectMapper;
+    private final AuthorService authorService;
 
 
-    public BookService(BookRepository bookRepository, BookAuthorRepository bookAuthorRepository, ObjectMapper objectMapper) {
+    public BookService(BookRepository bookRepository, BookAuthorRepository bookAuthorRepository, ObjectMapper objectMapper, AuthorService authorService) {
         this.bookRepository = bookRepository;
         this.bookAuthorRepository = bookAuthorRepository;
         this.objectMapper = objectMapper;
+        this.authorService = authorService;
     }
 
     public List<BookDtoResponse> findAll() {
@@ -50,7 +53,6 @@ public class BookService {
             throw new ServiceException(new ApiError(ErrorCode.ERROR_ADD_TO_DATABASE.name(), "addBookMethod", NestedExceptionUtils.getMostSpecificCause(e).getMessage()));
         }
         return objectMapper.convertValue(saveBook, BookDtoResponse.class);
-
     }
 
     public BookDtoResponse updateBook(BookDto updatedBook, Long id) throws ServiceException {
@@ -63,8 +65,17 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public void deleteBookAuthor( Long id, BookAuthorDto authorDto ) {
+    public void deleteBookAuthor(Long id, BookAuthorDto bookAuthorDto) {
+        bookAuthorRepository.deleteBooks(authorService.getAuthorId(bookAuthorDto), id);
+    }
 
-        bookAuthorRepository.deleteByAuthorIdAndBookId((long) 2, (long) 18);
+    public void addBookAuthor(Long id, BookAuthorDto bookAuthorDto) throws ServiceException {
+        bookAuthorDto.setAuthorId(authorService.getAuthorId(bookAuthorDto));
+        bookAuthorDto.setBookId(id);
+        try {
+            bookAuthorRepository.save(objectMapper.convertValue(bookAuthorDto, BookAuthor.class));
+        } catch (RuntimeException e) {
+            throw new ServiceException(new ApiError(ErrorCode.ERROR_ADD_TO_DATABASE.name(), "addBookAuthor Method", NestedExceptionUtils.getMostSpecificCause(e).getMessage()));
+        }
     }
 }

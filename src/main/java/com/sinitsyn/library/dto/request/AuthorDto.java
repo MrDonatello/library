@@ -2,6 +2,7 @@ package com.sinitsyn.library.dto.request;
 
 import com.sinitsyn.library.exceptions.ErrorCode;
 import com.sinitsyn.library.validation.MaxLengthInterface;
+import com.sinitsyn.library.validation.MinLengthInterface;
 import com.sinitsyn.library.validation.PatternInterface;
 import lombok.Data;
 
@@ -24,5 +25,6 @@ public class AuthorDto {
 
     private String biography;
 
+    @MinLengthInterface(error = ErrorCode.INCORRECT_YEAR_OF_BIRTH, message = "incorrect year of birth")
     private int yearOfBirth;
 }

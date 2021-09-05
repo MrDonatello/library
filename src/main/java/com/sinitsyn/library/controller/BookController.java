@@ -5,7 +5,6 @@ import com.sinitsyn.library.dto.request.BookAuthorDto;
 import com.sinitsyn.library.dto.request.BookDto;
 import com.sinitsyn.library.dto.response.BookDtoResponse;
 import com.sinitsyn.library.exceptions.ServiceException;
-import com.sinitsyn.library.model.BookAuthor;
 import com.sinitsyn.library.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,9 +46,13 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    @DeleteMapping("{id}/remove")
-    public void deleteBookAuthor(@PathVariable Long id) {
-        BookAuthorDto author = new BookAuthorDto();
-        bookService.deleteBookAuthor(id, author);
+    @PutMapping("{id}/remove")
+    public void deleteBookAuthor(@PathVariable Long id, @RequestBody @Valid BookAuthorDto bookAuthorDto) {
+        bookService.deleteBookAuthor(id, bookAuthorDto);
+    }
+
+    @PutMapping("{id}/add")
+    public void addBookAuthor(@PathVariable Long id, @RequestBody @Valid BookAuthorDto bookAuthorDto) throws ServiceException {
+        bookService.addBookAuthor(id, bookAuthorDto);
     }
 }

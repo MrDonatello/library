@@ -19,4 +19,8 @@ public class BookAuthorDto {
     private String lastName;
 
     private int yearOfBirth;
+
+    private Long bookId;
+
+    private Long authorId;
 }
