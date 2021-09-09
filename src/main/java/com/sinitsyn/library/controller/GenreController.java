@@ -3,7 +3,6 @@ package com.sinitsyn.library.controller;
 import com.sinitsyn.library.dto.request.GenreDto;
 import com.sinitsyn.library.dto.response.GenreDtoResponse;
 import com.sinitsyn.library.exceptions.ServiceException;
-import com.sinitsyn.library.model.Genre;
 import com.sinitsyn.library.service.GenreService;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,12 +30,12 @@ public class GenreController {
     }
 
     @PostMapping
-    public GenreDtoResponse addGenre(@RequestBody @Valid GenreDto genre)throws ServiceException {
+    public GenreDtoResponse addGenre(@RequestBody @Valid GenreDto genre) throws ServiceException {
         return genreService.addGenre(genre);
     }
 
     @PutMapping("{id}")
-    public GenreDtoResponse updateGenre(@PathVariable Long id, @RequestBody @Valid GenreDto updatedGenre)throws ServiceException {
+    public GenreDtoResponse updateGenre(@PathVariable Long id, @RequestBody @Valid GenreDto updatedGenre) throws ServiceException {
         return genreService.updateGenre(updatedGenre, id);
     }
 
