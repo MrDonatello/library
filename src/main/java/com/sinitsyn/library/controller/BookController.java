@@ -46,13 +46,5 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    @PutMapping("{id}/remove")
-    public void deleteBookAuthor(@PathVariable Long id, @RequestBody @Valid BookAuthorDto bookAuthorDto) {
-        bookService.deleteBookAuthor(id, bookAuthorDto);
-    }
 
-    @PutMapping("{id}/add")
-    public void addBookAuthor(@PathVariable Long id, @RequestBody @Valid BookAuthorDto bookAuthorDto) throws ServiceException {
-        bookService.addBookAuthor(id, bookAuthorDto);
-    }
 }

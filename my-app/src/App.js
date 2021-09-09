@@ -7,6 +7,12 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import UserEdit from "./components/UserEdit";
 import Author from "./components/Author";
 import AuthorEdit from "./components/AuthorEdit";
+import Genre from "./components/Genre";
+import GenreEdit from "./components/GenreEdit";
+import Book from "./components/Book";
+import BookEdit from "./components/BookEdit";
+import BookAuthorAdd from "./components/BookAuthorAdd";
+import BookAuthorRemove from "./components/BookAuthorRemove";
 
 class App extends Component {
     render() {
@@ -29,6 +35,24 @@ class App extends Component {
                         </Route>
                         <Route path='/library/author/:id'>
                             <AuthorEdit/>
+                        </Route>
+                        <Route path='/library/genre' exact={true}>
+                            <Genre/>
+                        </Route>
+                        <Route path='/library/genre/:id'>
+                            <GenreEdit/>
+                        </Route>
+                        <Route path='/library/book' exact={true}>
+                            <Book/>
+                        </Route>
+                        <Route path='/library/book/:id'>
+                            <BookEdit/>
+                        </Route>
+                        <Route path='/library/bookAuthor/add/:id'>
+                            <BookAuthorAdd/>
+                        </Route>
+                        <Route path='/library/bookAuthor/remove/:id'>
+                            <BookAuthorRemove/>
                         </Route>
                     </Switch>
                 </div>
