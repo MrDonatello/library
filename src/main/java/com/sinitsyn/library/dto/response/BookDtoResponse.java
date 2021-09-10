@@ -1,11 +1,16 @@
 package com.sinitsyn.library.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import lombok.NoArgsConstructor;
 
 @Data
-@Component
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BookDtoResponse {
+
 
     private Long id;
 

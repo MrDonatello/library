@@ -1,7 +1,6 @@
 package com.sinitsyn.library.controller;
 
 
-import com.sinitsyn.library.dto.request.BookAuthorDto;
 import com.sinitsyn.library.dto.request.BookDto;
 import com.sinitsyn.library.dto.response.BookDtoResponse;
 import com.sinitsyn.library.exceptions.ServiceException;

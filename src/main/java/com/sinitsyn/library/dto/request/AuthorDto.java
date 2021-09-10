@@ -5,7 +5,9 @@ import com.sinitsyn.library.validation.MaxLengthInterface;
 import com.sinitsyn.library.validation.MinLengthInterface;
 import com.sinitsyn.library.validation.PatternInterface;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
+@Component
 @Data
 public class AuthorDto {
 
