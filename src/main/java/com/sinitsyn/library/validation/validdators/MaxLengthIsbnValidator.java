@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class MaxLengthIsbnValidator implements ConstraintValidator<MaxLengthIsbnInterface, String> {
 
-    @Value("${max_name_length}")
+    @Value("${max_isbn_length}")
     private int maxIsbnLength;
 
     @Override
